@@ -1,6 +1,8 @@
 require('./config/config');
 
 const express = require('express');
+const mongoose = require('mongoose');
+
 const app = express();
 
 const bodyParser = require('body-parser');
@@ -8,34 +10,20 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 
+//Configuración global de rutas
+app.use(require('./routes/index'));
 
-app.get('/usuario', function(req, res) {
-    res.json('get Usuario');
-});
 
-app.post('/usuario', function(req, res) {
-    let body = req.body;
+mongoose.connect(process.env.URLDB, { useNewUrlParser: true, useCreateIndex: true },
+    (err, res) => {
 
-    res.json({
-        body
+        if (err) throw err;
+
+        console.log('Base de datos ONLINE!');
     });
-});
-
-app.put('/usuario/:id', function(req, res) {
-    let id = req.params.id;
-
-    res.json({
-        id
-    });
-});
-
-app.delete('/usuario', function(req, res) {
-    res.json('delete Usuario');
-});
-
 
 
 app.listen(process.env.PORT, () => {
